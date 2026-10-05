@@ -40,7 +40,8 @@ const SH={
  sw:(x,y)=>{const r=hy(x,y);return r<.95&&fr(r*2.2-atan2(y,x)/PI)<.2?Z():false}, // merging swirl
  sy:(x,y)=>{const r=hy(x,y);return(abs(r-.8)<.035||(r<.8&&abs(abs(x)-abs(y))<.04)||r<.1)?Z():false} // final unified symbol: ring + ×
 };
-const STC=[0,0,0,0,.4,.3,.35,1,1]; // per-stage convergence toward screen centre
+const STC=[0,0,0,0,.4,.3,.35,1,1];
+const EX=[1,1,1,1,.8,.97,.9,1,1]; // approx. half-width (unit coords) of each stage's formation // per-stage convergence toward screen centre
 
 let W,H,D,mob,S,rad,GS=[],NH=0,N=0,built='',F=[],NB=[],tops=[],hs=[],rx,ry,rz,tv,ox,oy,pxs,pys,pb,szs;
 const stages=()=>[[SH.hs,SH.ms],[SH.br,SH.cp],[SH.ey,SH.ln],[SH.ht,SH.wv],[SH.bl,SH.sq],[SH.sp,SH.gn],
@@ -107,7 +108,10 @@ function frame(t){
  c.clearRect(0,0,W,H);
  const a=Math.min(fs|0,7),b=a+1,tt=ss((fs-a-.3)/.4),
    bu=Math.max(sin(PI*tt),(1-intro.p)*(1-cl(fs))),   // burst = how disassembled the particles are
-   cg=STC[a]+(STC[b]-STC[a])*tt,ga=GS[a],gb=GS[b],S_=ga.S+(gb.S-ga.S)*tt,Y_=ga.y+(gb.y-ga.y)*tt,HS_=ga.hs+(gb.hs-ga.hs)*tt,
+   cg0=STC[a]+(STC[b]-STC[a])*tt,ga=GS[a],gb=GS[b],S_=ga.S+(gb.S-ga.S)*tt,Y_=ga.y+(gb.y-ga.y)*tt,HS_=ga.hs+(gb.hs-ga.hs)*tt,
+   // side-by-side: figures drift together in LEARN/CREATE/MOVE, but never so far that human and machine overlap (EX = half-width of each formation)
+   ex=EX[a]+(EX[b]-EX[a])*tt,cgL=cl(1-1.15*ex*S_/(W*.25)),
+   cg=mob?cg0:cg0-Math.max(0,cg0-cgL)*(1-ss((cg0-.4)/.5)),
    Sx=S_*(1+Math.max(0,cg-.5)),
    bt=Math.exp(-fr(time*1.1)*7)*(.03+.07*cl(1-abs(fs-3)));  // heartbeat pulse (strongest in FEEL)
  const ax=[0,0],ay=[0,0];
@@ -144,7 +148,7 @@ function frame(t){
  const ac=Math.round(fs);if(ac!==act){act=ac;links.forEach((l,n)=>l.classList.toggle('on',n===ac-1))}
  const cs=fs>6.6?'mix':cxp<W/2?'hum':'mac';if(ring.dataset.s!==cs)ring.dataset.s=cs; // cursor changes with the world it is over
  div.style.opacity=cl(1-(fs-5.5));
- div.style.transform=mob?`translateY(${my*10}px)`:`translateX(${mx*14}px) rotate(${mx*1.5}deg)`;
+ div.style.transform=mob?`translateY(${my*10+Y_-H*.5}px)`:`translateX(${mx*14}px) rotate(${mx*1.5}deg)`;
  vig.style.transform=`translate3d(${-mx*20}px,${-my*14}px,0)`;
  if(!mob){const b2=Math.round(bu*bu*20)/10;if(b2!==bl){bl=b2;cv.style.filter=b2?`blur(${b2}px)`:'none'}}
 }
