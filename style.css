@@ -102,3 +102,45 @@ h1 em{font-style:normal;font-weight:300;color:#fff8;margin:0 .1em}
 @media(max-width:360px){.sec h2{font-size:1.9rem}.cap{font-size:.64rem}.logo{letter-spacing:.14em;font-size:.8rem}}
 @media(min-width:769px) and (max-width:1100px){.mid{font-size:.58rem;letter-spacing:.14em}}
 @media(prefers-reduced-motion:reduce){#hero .rv{animation:none}}
+
+/* ===== expanded comparison content (Think → Move) =====
+   Caption pair + difference line live in one bottom-anchored grid (.cmp) so longer copy can never collide.
+   script.js measures .cmp and shrinks/lifts the particle figures to the free area above it. */
+.cmp{position:absolute;left:var(--pad);right:var(--pad);bottom:5%;display:grid;
+ grid-template-columns:minmax(0,1fr) minmax(0,.7fr) minmax(0,1fr);column-gap:clamp(12px,2.5vw,40px);align-items:end}
+.cmp .cap{position:static;max-width:min(100%,430px);font-size:clamp(.8rem,.55rem + .5vw,.95rem);line-height:1.6;overflow-wrap:break-word;hyphens:auto}
+.cmp .cap.l{justify-self:start}.cmp .cap.r{justify-self:end}
+.diff{align-self:end;text-align:center;font-size:clamp(.62rem,.5rem + .25vw,.74rem);font-weight:500;letter-spacing:.14em;
+ line-height:1.8;text-transform:uppercase;color:#fff9;overflow-wrap:break-word}
+.diff span{display:block}
+.dh{color:#ff6a4dcc}.dm{color:#38d8ffcc}
+
+/* final statement beats */
+.q3,.q4{bottom:11%;font-size:clamp(.92rem,.6rem + 1vw,1.35rem);font-weight:300;line-height:1.55;overflow-wrap:break-word;
+ padding:0 max(var(--pad),calc((100% - 860px)/2));text-shadow:0 0 14px var(--bg),0 0 28px var(--bg)}
+.q3 p+p,.q4 p+p{margin-top:.7em}
+.q3 .dh,.q3 .dm{font-weight:500}
+.small span{display:block;margin-top:.5em;color:#fff}
+.fin{height:640vh}   /* more scroll for the two added text beats */
+
+/* phones & small tablets (stacked worlds): captions stack too, human above machine */
+@media(max-width:768px) and (orientation:portrait){
+ .cmp{display:flex;flex-direction:column;gap:clamp(10px,1.8vh,16px);bottom:max(3%,calc(12px + env(safe-area-inset-bottom,0px)))}
+ .cmp .cap{width:100%;max-width:none;font-size:clamp(.76rem,.62rem + .7vw,.9rem);line-height:1.55;padding-left:.85em;border-left:2px solid #ff6a4d8c}
+ .cmp .cap.r{border-left-color:#38d8ff8c}
+ .diff{order:3;text-align:left;padding-left:calc(.85em + 2px);font-size:clamp(.64rem,.55rem + .3vw,.72rem);letter-spacing:.1em;line-height:1.6}
+ .diff span{display:inline}
+ .mid{top:var(--midy,50%)}
+ .q3,.q4{font-size:clamp(.88rem,.7rem + .8vw,1.15rem);padding:0 var(--pad)}
+}
+/* landscape phones / very short windows */
+@media(max-height:480px){
+ .cmp{bottom:3%}
+ .cmp .cap{font-size:clamp(.66rem,1.5vw,.8rem);line-height:1.45}
+ .diff{font-size:.6rem;line-height:1.5;letter-spacing:.1em}
+ .q3,.q4{bottom:8%;font-size:clamp(.74rem,1.8vw,.95rem);line-height:1.4}
+ .q3 p+p,.q4 p+p{margin-top:.4em}
+ .small span{margin-top:.2em}
+}
+/* the original mobile .big size was overridden by `.sec h2` (higher specificity) and clipped the title on narrow phones */
+@media(max-width:420px){.sec .big{font-size:calc((100vw - 24px)/12.6)}}

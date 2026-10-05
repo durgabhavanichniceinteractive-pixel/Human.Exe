@@ -42,7 +42,7 @@ const SH={
 };
 const STC=[0,0,0,0,.4,.3,.35,1,1]; // per-stage convergence toward screen centre
 
-let W,H,D,mob,S,rad,NH=0,N=0,built='',F=[],NB=[],tops=[],hs=[],rx,ry,rz,tv,ox,oy,pxs,pys,pb,szs;
+let W,H,D,mob,S,rad,GS=[],NH=0,N=0,built='',F=[],NB=[],tops=[],hs=[],rx,ry,rz,tv,ox,oy,pxs,pys,pb,szs;
 const stages=()=>[[SH.hs,SH.ms],[SH.br,SH.cp],[SH.ey,SH.ln],[SH.ht,SH.wv],[SH.bl,SH.sq],[SH.sp,SH.gn],
  [hand(0),hand(1),mob?PI:PI/2,mob?0:-PI/2],[SH.sw,SH.sw],[SH.sy,SH.sy]];
 function build(test,n,rot=0){const a=new Float32Array(n*3),cr=cos(rot),sr=sin(rot);let k=0,g=0;
@@ -63,7 +63,22 @@ function size(){W=innerWidth;H=innerHeight;
  mob=matchMedia('(max-width:768px) and (orientation:portrait)').matches; // stacked layout only on portrait phones/small tablets
  D=Math.min(devicePixelRatio||1,W<=1100?1.5:2);
  cv.width=W*D;cv.height=H*D;cv.style.width=W+'px';cv.style.height=H+'px';c.setTransform(D,0,0,D,0,0);
- S=mob?Math.min(W*.4,H*.14):Math.min(W*.2,H*.3);rad=W<=1100?80:130;rebuild();measure()}
+ S=mob?Math.min(W*.4,H*.14):Math.min(W*.2,H*.3);rad=W<=1100?80:130;rebuild();measure();geo()}
+/* Longer comparison copy needs room: measure the caption block (.cmp) and title in THINK→MOVE, then derive a figure
+   size/position that fits between them. Where the original layout already fits it is kept exactly (no change). */
+function geo(){
+ const O={S,y:H*(mob?.5:.54),hs:H*.165},cm=secs.slice(1,7).map(s=>s.querySelector('.cmp')).filter(Boolean),
+       hd=secs.slice(1,7).map(s=>s.querySelector('h2')).filter(Boolean);
+ let G=O;
+ if(cm.length&&hd.length){
+  const capTop=Math.min(...cm.map(e=>e.offsetTop)),titleBot=Math.max(...hd.map(e=>e.offsetTop+e.offsetHeight)),
+        top0=titleBot+Math.max(8,H*.012),bot0=capTop-Math.max(10,H*.02),Hr=Math.max(80,bot0-top0);
+  if(mob){const gp=Math.max(H*.05,40);   // gap keeps the FEEL question between the two figures
+   if(O.y-O.hs-S>=top0&&O.y+O.hs+S<=bot0)G=O;
+   else{const eS=Math.max(22,Math.min(S,(Hr-gp)/4));G={S:eS,y:(top0+bot0)/2,hs:eS+gp/2}}}
+  else{const sh=.04*H,eS=Math.max(40,Math.min(S,(Hr-sh)/2*.96));G={S:eS,y:cl(O.y,top0+eS+sh,bot0-eS),hs:0}}}
+ GS=[O,G,G,G,G,G,G,O,O];   // hero and final keep the original geometry
+ document.documentElement.style.setProperty('--midy',mob?G.y+'px':'50%')}
 function measure(){tops=secs.map(s=>s.offsetTop);hs=secs.map(s=>Math.max(1,s.offsetHeight-H))}
 
 /* ---------- input: mouse / touch / device tilt ---------- */
@@ -92,11 +107,12 @@ function frame(t){
  c.clearRect(0,0,W,H);
  const a=Math.min(fs|0,7),b=a+1,tt=ss((fs-a-.3)/.4),
    bu=Math.max(sin(PI*tt),(1-intro.p)*(1-cl(fs))),   // burst = how disassembled the particles are
-   cg=STC[a]+(STC[b]-STC[a])*tt,Sx=S*(1+Math.max(0,cg-.5)),
+   cg=STC[a]+(STC[b]-STC[a])*tt,ga=GS[a],gb=GS[b],S_=ga.S+(gb.S-ga.S)*tt,Y_=ga.y+(gb.y-ga.y)*tt,HS_=ga.hs+(gb.hs-ga.hs)*tt,
+   Sx=S_*(1+Math.max(0,cg-.5)),
    bt=Math.exp(-fr(time*1.1)*7)*(.03+.07*cl(1-abs(fs-3)));  // heartbeat pulse (strongest in FEEL)
  const ax=[0,0],ay=[0,0];
  for(let s=0;s<2;s++){const d=s?1:-1;
-  if(mob){ax[s]=W/2;ay[s]=H*(.5+d*.165*(1-cg**2.2)-.04*cg)}else{ax[s]=W/2+d*W*.25*(1-cg);ay[s]=H*(.54-.1*cg)}}
+  if(mob){ax[s]=W/2;ay[s]=Y_+d*HS_*(1-cg**2.2)-.04*H*cg}else{ax[s]=W/2+d*W*.25*(1-cg);ay[s]=Y_-.1*H*cg}}
  // human tilts more/softer, machine less/crisper; depth (z) makes foreground move more
  const T=[0,1].map(s=>{const ry_=mx*(s?.35:.5)+sin(time*.25)*.05,rx_=-my*(s?.25:.35);return[cos(ry_),sin(ry_),cos(rx_),sin(rx_)]});
  const FA=F[a],FB=F[b];
@@ -140,9 +156,9 @@ function text(){
   if(i===7){ // final: three beats, each fades + de-blurs in and out
    const beat=(el,a,b,keep)=>{tl.fromTo(el,{opacity:0,y:40,filter:'blur(14px)'},{opacity:1,y:0,filter:'blur(0px)',duration:.08},a);
     if(!keep)tl.to(el,{opacity:0,y:-30,filter:'blur(10px)',duration:.07},b)};
-   beat('.q1',.04,.3);beat('.q2',.34,.6);
-   tl.fromTo('.big',{opacity:0,letterSpacing:'.5em',scale:1.15,filter:'blur(18px)'},{opacity:1,letterSpacing:'.08em',scale:1,filter:'blur(0px)',duration:.14},.66);
-   beat('.small',.82,1,true);tl.to({},{duration:.01},.99);return}
+   beat('.q1',.03,.17);beat('.q2',.2,.34);beat('.q3',.37,.52);beat('.q4',.55,.68);
+   tl.fromTo('.big',{opacity:0,letterSpacing:'.5em',scale:1.15,filter:'blur(18px)'},{opacity:1,letterSpacing:'.08em',scale:1,filter:'blur(0px)',duration:.14},.72);
+   beat('.small',.86,1,true);tl.to({},{duration:.01},.99);return}
   const rv=s.querySelectorAll('.rv'),t=s.querySelector('.t');
   if(i>0){tl.fromTo(rv,{opacity:0,y:50,filter:'blur(16px)'},{opacity:1,y:0,filter:'blur(0px)',duration:.1,stagger:.012},0);
    tl.fromTo(t,{letterSpacing:'.45em',skewX:-12},{letterSpacing:'.06em',skewX:0,duration:.14},0)}   // text distortion
@@ -164,5 +180,6 @@ size();text();
 let rt;addEventListener('resize',()=>{if(innerWidth===W&&abs(innerHeight-H)<150)return;
  clearTimeout(rt);rt=setTimeout(()=>{size();ScrollTrigger.refresh();measure()},150)});
 gsap.to(intro,{p:1,duration:3.2,ease:'power2.out',delay:.2}); // hero: particles slowly assemble into the two silhouettes
+document.fonts&&document.fonts.ready.then(geo);
 requestAnimationFrame(frame);
 })();
