@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>HUMAN × MACHINE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="vig"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="divider"></div>
+<div class="ring"></div><div class="dot"></div>
+
+<header class="nav">
+  <a href="#hero" class="logo" aria-label="HUMAN.EXE">
+    <svg class="mark" viewBox="0 0 28 24" aria-hidden="true"><circle cx="9" cy="12" r="7"/><rect x="12" y="5" width="14" height="14" rx="1"/></svg>
+    <span>HUMAN<em>.EXE</em></span>
+  </a>
+  <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  <nav id="menu">
+    <a href="#think">Think</a><a href="#see">See</a><a href="#feel">Feel</a>
+    <a href="#learn">Learn</a><a href="#create">Create</a><a href="#move">Move</a>
+  </nav>
+</header>
+
+<main>
+  <section id="hero" class="sec"><div class="inner">
+    <h1 class="rv t">HUMAN <em>VS</em> MACHINE</h1>
+    <p class="cap l rv"><b>Human</b>Organic, imperfect, warm</p>
+    <p class="cap r rv"><b>Machine</b>Precise, tireless, structured</p>
+    <p class="hint rv">Scroll to break them apart</p>
+  </div></section>
+
+  <section id="think" class="sec"><div class="inner">
+    <h2 class="rv t">THINK</h2>
+    <p class="cap l rv"><b>Human</b>Neurons, intuition, imagination</p>
+    <p class="cap r rv"><b>Machine</b>Processors, logic, speed</p>
+  </div></section>
+
+  <section id="see" class="sec"><div class="inner">
+    <h2 class="rv t">SEE</h2>
+    <p class="cap l rv"><b>Human eye</b>Meaning before measurement</p>
+    <p class="cap r rv"><b>Machine camera</b>Every pixel, exactly</p>
+  </div></section>
+
+  <section id="feel" class="sec"><div class="inner">
+    <h2 class="rv t">FEEL</h2>
+    <p class="mid rv">Can a machine recognize a feeling?</p>
+    <p class="cap l rv"><b>Human</b>Heartbeat, warmth, neural signals</p>
+    <p class="cap r rv"><b>Machine</b>Sensors, signals, data streams</p>
+  </div></section>
+
+  <section id="learn" class="sec"><div class="inner">
+    <h2 class="rv t">LEARN</h2>
+    <p class="cap l rv"><b>Human</b>Memory → Experience → Mistake → Growth</p>
+    <p class="cap r rv"><b>Machine</b>Data → Training → Pattern → Prediction</p>
+  </div></section>
+
+  <section id="create" class="sec"><div class="inner">
+    <h2 class="rv t">CREATE</h2>
+    <p class="cap l rv"><b>Human</b>A sketch that grows by feel</p>
+    <p class="cap r rv"><b>Machine</b>A structure that generates itself</p>
+  </div></section>
+
+  <section id="move" class="sec"><div class="inner">
+    <h2 class="rv t">MOVE</h2>
+    <p class="cap l rv"><b>Human hand</b>Muscle, nerve, touch</p>
+    <p class="cap r rv"><b>Robotic hand</b>Servo, torque, precision</p>
+  </div></section>
+
+  <section id="final" class="sec fin"><div class="inner">
+    <p class="q q1">Maybe the question isn't Human vs Machine.</p>
+    <p class="q q2">What happens when they become one?</p>
+    <h2 class="big">HUMAN × MACHINE</h2>
+    <p class="q small">The future isn't choosing one.</p>
+  </div></section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

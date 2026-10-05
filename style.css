@@ -1,0 +1,104 @@
+:root{--bg:#05060a;--h:#ff6a4d;--m:#38d8ff;--t:#f2efec;--pad:clamp(16px,4vw,48px)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);overflow-x:clip}
+body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--t);overflow-x:clip;-webkit-tap-highlight-color:transparent}
+.vig{position:fixed;inset:-4%;z-index:0;pointer-events:none;will-change:transform;
+ background:radial-gradient(55% 75% at 25% 52%,#2a0f0b 0%,transparent 70%),radial-gradient(55% 75% at 75% 52%,#061a24 0%,transparent 70%)}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.divider{position:fixed;z-index:2;left:50%;top:0;width:1px;height:100%;pointer-events:none;
+ background:linear-gradient(#0000,#ffffff40 30%,#ffffff40 70%,#0000)}
+main{position:relative;z-index:3}
+
+/* nav */
+.nav{position:fixed;inset:0 0 auto;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:18px var(--pad)}
+.logo{position:relative;z-index:32;display:inline-flex;align-items:center;gap:.6em;font-weight:700;letter-spacing:.2em;
+ font-size:clamp(.85rem,1.1vw,1.05rem);color:var(--t);text-decoration:none;white-space:nowrap}
+.logo em{font-style:normal;font-weight:300;color:var(--m);letter-spacing:.14em;margin-left:.05em;text-shadow:0 0 14px #38d8ff80}
+.mark{width:1.9em;height:1.6em;fill:none;stroke-width:1.6;overflow:visible}
+.mark circle{stroke:var(--h)}.mark rect{stroke:var(--m)}
+.logo:hover .mark{transform:rotate(-8deg) scale(1.08)}.mark{transition:transform .35s}
+#menu{display:flex;gap:clamp(14px,2.4vw,36px)}
+#menu a{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:#fff9;text-decoration:none;transition:color .3s}
+#menu a:hover,#menu a.on{color:#fff}
+#menu a.on{text-shadow:0 0 12px var(--m)}
+.burger{display:none;position:relative;z-index:32;width:44px;height:44px;background:none;border:0;cursor:pointer}
+.burger span{position:absolute;left:11px;right:11px;height:2px;background:#fff;transition:.35s}
+.burger span:first-child{top:18px}.burger span:last-child{top:25px}
+.open .burger span:first-child{transform:translateY(3.5px) rotate(45deg)}
+.open .burger span:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+
+/* sections: the tall .sec provides scroll distance, sticky .inner holds the text */
+.sec{height:260vh;position:relative}
+.fin{height:480vh}
+#hero{height:135vh}
+.inner{position:sticky;top:0;height:100vh;height:100svh;pointer-events:none;overflow:hidden}
+.sec h1,.sec h2{position:absolute;top:10%;left:0;right:0;text-align:center;font-weight:700;letter-spacing:.06em;line-height:1;
+ font-size:clamp(2rem,min(7vw,11vh),6.5rem);padding:0 var(--pad)}
+#hero h1{font-size:clamp(1.5rem,min(5.6vw,9vh),5.4rem)}
+h1 em{font-style:normal;font-weight:300;color:#fff8;margin:0 .1em}
+.cap{position:absolute;bottom:5%;max-width:min(40%,420px);font-size:clamp(.7rem,1.05vw,.95rem);line-height:1.5;color:#fffb;font-weight:300}
+.cap b{display:block;font-weight:700;letter-spacing:.22em;text-transform:uppercase;font-size:.78em;margin-bottom:.3em}
+.cap.l{left:var(--pad)}.cap.l b{color:var(--h)}
+.cap.r{right:var(--pad);text-align:right}.cap.r b{color:var(--m)}
+.mid{position:absolute;top:50%;left:50%;width:clamp(110px,11vw,230px);transform:translate(-50%,-50%);text-align:center;
+ font-size:clamp(.62rem,.95vw,.9rem);letter-spacing:.2em;text-transform:uppercase;line-height:1.7;font-weight:500}
+.hint{position:absolute;bottom:5%;left:0;right:0;text-align:center;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:#fff8}
+#hero .cap{bottom:12%}
+#hero .rv{animation:up 1.4s .6s backwards}
+@keyframes up{from{opacity:0;transform:translateY(30px)}}
+
+/* final text lives under the unified symbol */
+.q,.big{position:absolute;left:0;right:0;text-align:center;padding:0 var(--pad);opacity:0}
+.q1,.q2{bottom:11%;font-size:clamp(1.1rem,3vw,2.3rem);font-weight:300}
+.big{bottom:13%;font-size:clamp(1.7rem,7.5vw,6.8rem);font-weight:700;letter-spacing:.08em}
+.small{bottom:6%;font-size:clamp(.7rem,1.3vw,1rem);letter-spacing:.3em;text-transform:uppercase;color:#fffa}
+
+/* cursor (fine pointers only) */
+.ring,.dot{position:fixed;z-index:50;left:0;top:0;pointer-events:none;border-radius:50%;display:none}
+@media(hover:hover) and (pointer:fine){
+ body,a,button{cursor:none}
+ .ring,.dot{display:block}
+ /* × crosshair follows instantly; ring lags behind and morphs: circle over the human side, rotated square over the machine side */
+ .dot{width:12px;height:12px;margin:-6px;border-radius:0}
+ .dot::before,.dot::after{content:'';position:absolute;left:50%;top:0;width:1.5px;height:100%;margin-left:-.75px;background:#fff;rotate:45deg}
+ .dot::after{rotate:-45deg}
+ .ring{width:40px;height:40px;margin:-20px;border:1.5px solid #fff9;border-radius:50%;
+  transition:scale .35s,rotate .45s,border-radius .45s,background .35s,border-color .35s,box-shadow .35s}
+ .ring[data-s=hum]{border-color:var(--h);box-shadow:0 0 16px #ff6a4d55}
+ .ring[data-s=mac]{border-color:var(--m);box-shadow:0 0 16px #38d8ff55;border-radius:3px;rotate:45deg}
+ .ring[data-s=mix]{border-color:#fff;box-shadow:0 0 16px #ffffff44;border-radius:50% 4px}
+ .ring.hov{scale:1.7;background:#ffffff1a}
+}
+
+/* tablet */
+@media(max-width:1200px){.cap{max-width:34%}}
+@media(max-width:991px){
+ .burger{display:block}
+ #menu{position:fixed;inset:0;z-index:31;flex-direction:column;justify-content:center;align-items:center;gap:26px;background:#05060af5;
+  opacity:0;pointer-events:none;transition:opacity .4s}
+ .open #menu{opacity:1;pointer-events:auto}
+ #menu a{font-size:1.4rem}
+}
+/* mobile portrait: worlds are stacked vertically (human top, machine bottom). Must match `mob` in script.js */
+@media(max-width:768px) and (orientation:portrait){
+ .divider{left:0;top:50%;width:100%;height:1px;background:linear-gradient(90deg,#0000,#ffffff40 30%,#ffffff40 70%,#0000)}
+ .sec h1,.sec h2{top:9%}
+ .cap{left:var(--pad)!important;right:var(--pad)!important;max-width:none;text-align:left!important;font-size:.7rem}
+ .cap b{display:inline;margin-right:.7em}
+ .cap.r{bottom:max(3.5%,16px)}
+ .cap.l{bottom:calc(max(3.5%,16px) + 3.6em)}   /* sits above .r even when .r wraps to 2 lines */
+ #hero .cap.r{bottom:calc(max(3.5%,16px) + 2.4em)}#hero .cap.l{bottom:calc(max(3.5%,16px) + 6em)}
+ .mid{top:50%;width:92%;font-size:.58rem;letter-spacing:.14em;line-height:1.4}  /* between the two figures */
+ .hint{bottom:max(2%,8px)}
+ .big{white-space:nowrap;font-size:clamp(1.3rem,6.6vw,3rem);padding:0 8px}
+}
+/* phones in landscape / very short windows: keep side-by-side, shrink text */
+@media(max-height:480px){
+ .sec h1,.sec h2{top:6%;font-size:min(7vw,15vh)}
+ .cap{font-size:.62rem;bottom:3%;max-width:36%}#hero .cap{bottom:8%}
+ .hint,.mid{display:none}
+ .q1,.q2{bottom:8%;font-size:1rem}.big{bottom:10%}.small{bottom:3%}
+}
+@media(max-width:360px){.sec h2{font-size:1.9rem}.cap{font-size:.64rem}.logo{letter-spacing:.14em;font-size:.8rem}}
+@media(min-width:769px) and (max-width:1100px){.mid{font-size:.58rem;letter-spacing:.14em}}
+@media(prefers-reduced-motion:reduce){#hero .rv{animation:none}}
